@@ -1,0 +1,7 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        # slsa-verifier only trusts the SLSA generator when it is referenced by tag.
+        "slsa-framework/slsa-github-generator/*": ref-pin
+        "*": hash-pin
