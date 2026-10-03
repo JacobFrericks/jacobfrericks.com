@@ -35,7 +35,17 @@ test("every verify check is marked PASS or NEXT, and planned work is not marked 
   assert.ok(checks.length >= 5);
   for (const [, status] of checks) assert.ok(["pass", "next"].includes(status), `unknown status ${status}`);
   const passed = checks.filter(([, status]) => status === "pass").map(([, , name]) => name);
-  assert.ok(!passed.some((name) => name.includes("SBOM")), "SBOM is claimed before it exists");
+  assert.ok(passed.length >= 5, "too few checks pass");
+});
+
+test("an SBOM claim is backed by a workflow that generates, signs, and publishes it", () => {
+  const claimed = /data-status="pass"[^>]*>[^<]*SBOM/.test(section);
+  const workflow = readFileSync(new URL("../.github/workflows/deploy.yml", import.meta.url), "utf8");
+  const backed =
+    /npm sbom --sbom-format cyclonedx/.test(workflow) &&
+    /sha256sum site\.tar site\.cdx\.json/.test(workflow) &&
+    /gh release upload "\$TAG" site\.tar site\.cdx\.json/.test(workflow);
+  assert.equal(claimed, backed, claimed ? "SBOM is claimed but the workflow does not publish it" : "SBOM exists but is not claimed");
 });
 
 test("a Content Security Policy claim is backed by a real policy on the page", () => {

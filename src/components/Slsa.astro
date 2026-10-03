@@ -42,12 +42,12 @@ const checks = [
   { name: "Secret, SAST, SCA, and workflow scans on every PR", status: "pass" },
   { name: "OpenSSF Scorecard published", status: "pass" },
   { name: "Strict Content Security Policy", status: "pass" },
-  { name: "SBOM published with each release", status: "next" },
+  { name: "Signed CycloneDX SBOM with each release", status: "pass" },
 ];
 
 const command = [
   `gh release download --repo ${repo} --pattern 'site.*'`,
-  "slsa-verifier verify-artifact site.tar \\",
+  "slsa-verifier verify-artifact site.tar site.cdx.json \\",
   "    --provenance-path site.intoto.jsonl \\",
   `    --source-uri github.com/${repo}`,
 ];
@@ -101,7 +101,7 @@ const command = [
     <div>
       <h3 class="verify-title">Verify this site</h3>
       <p class="verify-text">
-        Every release of this site is one signed bundle. Download the latest release and check it yourself.
+        Every release of this site is one signed bundle plus its SBOM. Download the latest release and check both yourself.
       </p>
       <ul class="checks">
         {
@@ -128,6 +128,7 @@ const command = [
 
 <span class="ok">Verified build using builder "https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@refs/tags/v2.1.0"
 Verifying artifact site.tar: PASSED
+Verifying artifact site.cdx.json: PASSED
 
 PASSED: SLSA verification passed</span></code></pre>
     </div>

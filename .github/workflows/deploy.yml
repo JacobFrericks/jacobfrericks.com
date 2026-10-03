@@ -40,9 +40,14 @@ jobs:
           tar --dereference --hard-dereference --directory dist -cvf artifact.tar --exclude=.git --exclude=.github .
           cp artifact.tar site.tar
 
-      - name: Hash site bundle
+      # CycloneDX SBOM of every package used to build the site, from npm itself (no extra tool).
+      - name: Generate SBOM
+        run: npm sbom --sbom-format cyclonedx --sbom-type application > site.cdx.json
+
+      # Both files become subjects of the SLSA provenance, so the SBOM is signed with the bundle.
+      - name: Hash release files
         id: hash
-        run: echo "hashes=$(sha256sum site.tar | base64 -w0)" >> "$GITHUB_OUTPUT"
+        run: echo "hashes=$(sha256sum site.tar site.cdx.json | base64 -w0)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -54,7 +59,9 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: site
-          path: site.tar
+          path: |
+            site.tar
+            site.cdx.json
           if-no-files-found: error
 
   # Keeps a release PR open with the next version and changelog, built from Conventional Commits.
@@ -82,7 +89,7 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
-  # Attaches the exact bundle that ships to the new release.
+  # Attaches the exact bundle that ships, and its SBOM, to the new release.
   upload-bundle:
     if: needs.release-please.outputs.release_created == 'true'
     needs: [build, release-please]
@@ -93,11 +100,11 @@ jobs:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: site
-      - name: Upload site bundle
+      - name: Upload site bundle and SBOM
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ needs.release-please.outputs.tag_name }}
-        run: gh release upload "$TAG" site.tar --repo "$GITHUB_REPOSITORY"
+        run: gh release upload "$TAG" site.tar site.cdx.json --repo "$GITHUB_REPOSITORY"
 
   # SLSA Build L3 provenance. Pull requests sign it to exercise the pipeline; releases also publish it.
   # slsa-verifier only trusts this builder by tag, so it is pinned to a version tag instead of a SHA.

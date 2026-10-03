@@ -16,11 +16,12 @@ new version and deploys it. See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 ## Verify a release
 
-Each release (`vX.Y.Z`) carries the site bundle that was deployed and its SLSA Build L3 provenance.
+Each release (`vX.Y.Z`) carries the site bundle that was deployed, a CycloneDX SBOM (`site.cdx.json`) of every package
+used to build it, and SLSA Build L3 provenance that covers both files.
 
 ```sh
 gh release download --repo JacobFrericks/jacobfrericks.com --pattern 'site.*'
-slsa-verifier verify-artifact site.tar \
+slsa-verifier verify-artifact site.tar site.cdx.json \
   --provenance-path site.intoto.jsonl \
   --source-uri github.com/JacobFrericks/jacobfrericks.com
 ```
