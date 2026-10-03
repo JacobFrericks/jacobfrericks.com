@@ -1,0 +1,36 @@
+name: Semgrep
+
+# SAST: unsafe patterns in our own code and workflows. Metrics are off, so nothing is sent to Semgrep.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The image is pinned by digest. Dependabot cannot see images in run steps, so bump this by hand.
+      - name: Run Semgrep
+        run: |
+          docker run --rm -v "$PWD:/src" -w /src \
+            semgrep/semgrep:1.179.0@sha256:93963d9295a366f59e4850127b1550400ee7b388f04fe144e4a1f6325d96e01b \
+            semgrep scan --metrics=off --error \
+              --config p/javascript --config p/typescript --config p/github-actions --config p/secrets \
+              --sarif --output semgrep.sarif
+
+      - if: ${{ !cancelled() }}
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
