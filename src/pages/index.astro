@@ -1,63 +1,18 @@
 ---
-const title = "Jacob Frericks | Staff DevOps Engineer";
+import Base from "../layouts/Base.astro";
+import TopBar from "../components/TopBar.astro";
+import Hero from "../components/Hero.astro";
+
+const links = [
+  { label: "GitHub", href: "https://github.com/JacobFrericks" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/jacobfrericks" },
+];
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content="Staff DevOps Engineer focused on software supply chain security." />
-    <style>
-      :root {
-        color-scheme: dark;
-        --ground: #0e2a47;
-        --line: #7fd4f0;
-        --paper: #e8f1f7;
-        --muted: #93b3cc;
-      }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        box-sizing: border-box;
-        background: var(--ground);
-        color: var(--paper);
-        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      }
-      main {
-        max-width: 40rem;
-      }
-      .label {
-        font-family: ui-monospace, "SF Mono", Menlo, monospace;
-        font-size: 0.75rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-      h1 {
-        margin: 0.5rem 0;
-        font-size: clamp(2.5rem, 8vw, 4.5rem);
-        line-height: 1;
-        text-transform: uppercase;
-      }
-      h1 span {
-        color: var(--line);
-      }
-      p {
-        color: var(--muted);
-        font-size: 1.125rem;
-        line-height: 1.6;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <div class="label">Staff DevOps Engineer</div>
-      <h1>Jacob <span>Frericks</span></h1>
-      <p>I build secure pipelines developers actually use. The full site is on its way.</p>
-    </main>
-  </body>
-</html>
+<Base
+  title="Jacob Frericks | Staff DevOps Engineer"
+  description="Staff DevOps Engineer focused on software supply chain security."
+>
+  <TopBar links={links} />
+  <Hero />
+</Base>

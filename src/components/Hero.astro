@@ -1,0 +1,113 @@
+---
+// Years of experience are counted at build time, so the number stays current.
+const years = new Date().getFullYear() - 2013;
+---
+
+<div class="hero">
+  <div>
+    <div class="label">Staff DevOps Engineer · DevSecOps · Software supply chain</div>
+    <h1>I build <em>secure</em> pipelines developers <em>actually use</em>.</h1>
+    <p>
+      {years} years from Java developer to DevSecOps. Today I am
+      <strong>tech lead of the team that runs GitHub and GitHub Actions at a Fortune 10 healthcare company</strong>,
+      where we are building a SLSA Build Level 3 pipeline.
+    </p>
+    <div class="actions">
+      <a class="btn solid" href="https://github.com/JacobFrericks">GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/jacobfrericks">LinkedIn</a>
+    </div>
+  </div>
+  <div class="titleblock" aria-label="Drawing title block">
+    <div class="wide"><b>Drawing</b>The paved road, commit to cluster</div>
+    <div><b>Dwg no.</b>JF-001</div>
+    <div><b>Rev</b>0.3</div>
+    <div><b>Drawn by</b>J. Frericks</div>
+    <div><b>Since</b>2013</div>
+    <div class="wide"><b>Status</b><span class="stamp">Under construction</span></div>
+  </div>
+</div>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 32px;
+    padding: 56px 24px 48px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: clamp(44px, 7vw, 84px);
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    margin: 12px 0 20px;
+    text-wrap: balance;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--line);
+  }
+  p {
+    max-width: 60ch;
+    color: var(--muted);
+    margin: 0 0 28px;
+    font-size: 18px;
+  }
+  p strong {
+    color: var(--paper);
+    font-weight: 500;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .titleblock {
+    align-self: end;
+    border: 1px solid var(--line-mid);
+    font-family: var(--mono);
+    font-size: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .titleblock div {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line-faint);
+    border-right: 1px solid var(--line-faint);
+  }
+  .titleblock div:nth-child(2n) {
+    border-right: 0;
+  }
+  .titleblock .wide {
+    grid-column: 1 / -1;
+    border-right: 0;
+  }
+  .titleblock div:last-child {
+    border-bottom: 0;
+  }
+  .titleblock b {
+    display: block;
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .stamp {
+    color: var(--risk);
+  }
+  @media (max-width: 860px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+    .titleblock {
+      max-width: 360px;
+    }
+  }
+  @media (max-width: 640px) {
+    .hero {
+      padding-top: 36px;
+    }
+  }
+</style>
