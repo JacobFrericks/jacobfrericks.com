@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.4.0...v0.5.0) (2026-10-03)
+
+
+### Features
+
+* add a strict Content Security Policy ([#24](https://github.com/JacobFrericks/jacobfrericks.com/issues/24)) ([df44af3](https://github.com/JacobFrericks/jacobfrericks.com/commit/df44af3019cdfd3b26c82edd0cdad38c59c3092b))
+* add the career timeline ([#26](https://github.com/JacobFrericks/jacobfrericks.com/issues/26)) ([d6e1e2f](https://github.com/JacobFrericks/jacobfrericks.com/commit/d6e1e2f64afbf8d3702a284f46160f2cf1cbf0e7))
+* add the contact section and footer ([#28](https://github.com/JacobFrericks/jacobfrericks.com/issues/28)) ([9e677c5](https://github.com/JacobFrericks/jacobfrericks.com/commit/9e677c5100bbdaa7f115eb5a310fc1d49252c7f0))
+* add the toolbox section ([#27](https://github.com/JacobFrericks/jacobfrericks.com/issues/27)) ([796e464](https://github.com/JacobFrericks/jacobfrericks.com/commit/796e464d62141a2fb869f27ac5581b660128c67b))
+
 ## [0.4.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.3.0...v0.4.0) (2026-10-03)
 
 
