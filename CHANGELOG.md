@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.5.0...v1.0.0) (2026-10-03)
+
+
+### Features
+
+* mark the site as released at version 1.0.0 ([#31](https://github.com/JacobFrericks/jacobfrericks.com/issues/31)) ([aef24f0](https://github.com/JacobFrericks/jacobfrericks.com/commit/aef24f064c24f6190f0ccaaa6bf335d91d9788a7))
+* publish a signed CycloneDX SBOM with each release ([#29](https://github.com/JacobFrericks/jacobfrericks.com/issues/29)) ([d5b1a8e](https://github.com/JacobFrericks/jacobfrericks.com/commit/d5b1a8e592a5b396260794b8fe762952f7375314))
+
 ## [0.5.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.4.0...v0.5.0) (2026-10-03)
 
 
