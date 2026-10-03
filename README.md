@@ -10,11 +10,13 @@ npm ci
 npm run build && npm run preview   # serves the built site at http://localhost:4321
 ```
 
-Pull requests run the build only. Merging to `main` deploys.
+Pull requests run the build, tests, and scans. Merging to `main` updates an open release PR
+(managed by release-please from Conventional Commits). Merging that release PR publishes a
+new version and deploys it. See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 ## Verify a release
 
-Each deploy from `main` publishes the site bundle and its SLSA Build L3 provenance as a release.
+Each release (`vX.Y.Z`) carries the site bundle that was deployed and its SLSA Build L3 provenance.
 
 ```sh
 gh release download --repo JacobFrericks/jacobfrericks.com --pattern 'site.*'

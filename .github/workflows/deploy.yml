@@ -57,10 +57,35 @@ jobs:
           path: site.tar
           if-no-files-found: error
 
-  # Each deploy from main gets a release holding the exact bundle that ships.
-  release:
+  # Keeps a release PR open with the next version and changelog, built from Conventional Commits.
+  # Merging that PR creates the release. A GitHub App token is used so CI runs on the release PR.
+  release-please:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
+
+      - id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # Attaches the exact bundle that ships to the new release.
+  upload-bundle:
+    if: needs.release-please.outputs.release_created == 'true'
+    needs: [build, release-please]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -68,17 +93,17 @@ jobs:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: site
-      - name: Create release
+      - name: Upload site bundle
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: site-${{ github.run_number }}
-        run: gh release create "$TAG" site.tar --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$TAG" --notes "Site bundle built from $GITHUB_SHA."
+          TAG: ${{ needs.release-please.outputs.tag_name }}
+        run: gh release upload "$TAG" site.tar --repo "$GITHUB_REPOSITORY"
 
-  # SLSA Build L3 provenance. slsa-verifier only trusts this builder by tag, so it is
-  # pinned to a version tag here instead of a SHA.
+  # SLSA Build L3 provenance. Pull requests sign it to exercise the pipeline; releases also publish it.
+  # slsa-verifier only trusts this builder by tag, so it is pinned to a version tag instead of a SHA.
   provenance:
-    if: ${{ !cancelled() && needs.build.result == 'success' && needs.release.result != 'failure' }}
-    needs: [build, release]
+    if: ${{ !cancelled() && needs.build.result == 'success' && (github.event_name == 'pull_request' || needs.release-please.outputs.release_created == 'true') }}
+    needs: [build, release-please]
     permissions:
       actions: read
       id-token: write
@@ -87,13 +112,13 @@ jobs:
     with:
       base64-subjects: ${{ needs.build.outputs.hashes }}
       provenance-name: site.intoto.jsonl
-      upload-assets: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      upload-tag-name: site-${{ github.run_number }}
+      upload-assets: ${{ needs.release-please.outputs.release_created == 'true' }}
+      upload-tag-name: ${{ needs.release-please.outputs.tag_name }}
 
-  # Only main deploys, and only after provenance is signed.
+  # Only releases deploy, and only after the bundle and provenance are attached.
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [build, provenance]
+    if: needs.release-please.outputs.release_created == 'true'
+    needs: [build, release-please, upload-bundle, provenance]
     runs-on: ubuntu-latest
     permissions:
       pages: write
