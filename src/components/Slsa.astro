@@ -1,0 +1,346 @@
+---
+import pkg from "../../package.json";
+
+const repo = "JacobFrericks/jacobfrericks.com";
+
+// Each level adds a guarantee and stops a new kind of attack.
+const rungs = [
+  {
+    level: "L3",
+    title: "Hardened build platform",
+    text: "Builds run isolated. Signing keys never reach user code, so provenance cannot be forged.",
+    stops:
+      "tampering inside the build itself, by another build or a stolen credential. Example: SolarWinds (2020), where malware in the build system shipped inside signed updates.",
+    top: true,
+  },
+  {
+    level: "L2",
+    title: "Signed provenance",
+    text: "A hosted builder signs a record of what it built and from which source.",
+    stops:
+      "an artifact swapped after the build, because the signature no longer matches. Example: Codecov (2021), where attackers changed a published script after it was built.",
+  },
+  {
+    level: "L1",
+    title: "Provenance exists",
+    text: "Each artifact ships with a record of how it was built.",
+    stops: "mistakes, like a release built from the wrong branch or with the wrong steps.",
+  },
+  {
+    level: "L0",
+    title: "No guarantees",
+    text: "Where most build systems start.",
+    stops: "nothing. You trust the artifact because of where you downloaded it.",
+  },
+];
+
+// Only claims that are true today are PASS. Planned work is marked NEXT.
+const checks = [
+  { name: "SLSA Build L3 provenance on every release", status: "pass" },
+  { name: "Release bundle signed with Sigstore", status: "pass" },
+  { name: "Actions pinned by SHA, npm pinned by lockfile", status: "pass" },
+  { name: "Secret, SAST, SCA, and workflow scans on every PR", status: "pass" },
+  { name: "OpenSSF Scorecard published", status: "pass" },
+  { name: "Content Security Policy", status: "next" },
+  { name: "SBOM published with each release", status: "next" },
+];
+
+const command = [
+  `gh release download --repo ${repo} --pattern 'site.*'`,
+  "slsa-verifier verify-artifact site.tar \\",
+  "    --provenance-path site.intoto.jsonl \\",
+  `    --source-uri github.com/${repo}`,
+];
+---
+
+<section id="slsa" class="section">
+  <div class="sec-head">
+    <span class="label">Section B</span>
+    <h2>SLSA ladder</h2>
+    <p>
+      SLSA is a public scale for build integrity. Each level adds a guarantee and stops a new kind of attack. My team
+      is building toward the top one at work, and this site already ships at it.
+    </p>
+  </div>
+
+  <div class="ladder">
+    {
+      rungs.map((rung) => (
+        <div class={rung.top ? "rung top" : "rung"}>
+          <div class="lvl">
+            {rung.level}
+            <small>Build</small>
+          </div>
+          <div>
+            <h3>{rung.title}</h3>
+            <p>{rung.text}</p>
+            <p class="stops">
+              <b>Stops:</b> {rung.stops}
+            </p>
+          </div>
+          <div class="chips">
+            {rung.top && (
+              <>
+                <a class="chip ok" href="#verify">
+                  ✓ This site · v{pkg.version}
+                </a>
+                <span class="chip wip">◐ Enterprise pipeline · tech lead</span>
+              </>
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  <p class="ladder-note">
+    <b>Groundwork:</b> from 2022 to 2024 I built a pipeline that attached signed SBOM attestations to every container
+    with cosign. That proved what was inside an image. Provenance adds proof of how it was built.
+  </p>
+
+  <div id="verify" class="verify">
+    <div>
+      <h3 class="verify-title">Verify this site</h3>
+      <p class="verify-text">
+        Every release of this site is one signed bundle. Download the latest release and check it yourself.
+      </p>
+      <ul class="checks">
+        {
+          checks.map((check) => (
+            <li data-status={check.status}>
+              {check.name}
+              <span class={check.status}>{check.status === "pass" ? "PASS" : "NEXT"}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="links">
+        <a href={`https://github.com/${repo}/releases/latest`}>Latest release</a>
+        <a href={`https://scorecard.dev/viewer/?uri=github.com/${repo}`}>Scorecard</a>
+      </p>
+    </div>
+    <div class="term">
+      <div class="term-bar">
+        <span class="label">Run it yourself</span>
+        <button class="copy" type="button" data-copy={command.join("\n")}>Copy</button>
+      </div>
+      <pre><code><span class="p">$</span> {command[0]}
+<span class="p">$</span> {command.slice(1).join("\n")}
+
+<span class="ok">Verified build using builder "https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@refs/tags/v2.1.0"
+Verifying artifact site.tar: PASSED
+
+PASSED: SLSA verification passed</span></code></pre>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Copies the verify commands. Some browsers block clipboard access, so say how to copy by hand.
+  for (const button of document.querySelectorAll<HTMLButtonElement>("#verify .copy")) {
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? "");
+        button.textContent = "Copied";
+      } catch {
+        button.textContent = "Select and copy";
+      }
+      setTimeout(() => (button.textContent = "Copy"), 1800);
+    });
+  }
+</script>
+
+<style>
+  .ladder {
+    display: grid;
+    border: 1px solid var(--line-mid);
+  }
+  .rung {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr) minmax(0, 0.9fr);
+    border-bottom: 1px solid var(--line-faint);
+  }
+  .rung:last-child {
+    border-bottom: 0;
+  }
+  .rung > div {
+    padding: 16px 18px;
+  }
+  .rung.top {
+    background: rgba(111, 211, 154, 0.06);
+  }
+  .lvl {
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--line);
+    border-right: 1px solid var(--line-faint);
+    line-height: 1.1;
+  }
+  .rung.top .lvl {
+    color: var(--ok);
+  }
+  .lvl small {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+  }
+  h3 {
+    margin: 0 0 2px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .rung p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .rung p.stops {
+    margin-top: 8px;
+    color: var(--paper);
+    font-size: 13px;
+    max-width: 62ch;
+  }
+  .stops b {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--line);
+    margin-right: 4px;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: center;
+  }
+  .chip.ok {
+    border-color: var(--ok);
+    color: var(--ok);
+    text-decoration: none;
+  }
+  .chip.ok:hover {
+    background: rgba(111, 211, 154, 0.12);
+  }
+  .chip.wip {
+    border-color: var(--risk);
+    color: var(--risk);
+  }
+  .ladder-note {
+    margin: 14px 0 0;
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 70ch;
+  }
+  .ladder-note b {
+    color: var(--paper);
+    font-weight: 500;
+  }
+  .verify {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 28px;
+    align-items: start;
+  }
+  .verify-title {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  .verify-text {
+    margin: 0 0 16px;
+    color: var(--muted);
+  }
+  .checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--line-mid);
+  }
+  .checks li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line-faint);
+    font-size: 14px;
+  }
+  .checks li:last-child {
+    border-bottom: 0;
+  }
+  .checks span {
+    font-family: var(--mono);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .checks .pass {
+    color: var(--ok);
+  }
+  .checks .next {
+    color: var(--risk);
+  }
+  .links {
+    display: flex;
+    gap: 20px;
+    margin: 14px 0 0;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .term {
+    border: 1px solid var(--line-mid);
+    background: var(--ground-deep);
+    min-width: 0;
+  }
+  .term-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line-faint);
+  }
+  pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--paper);
+  }
+  .p {
+    color: var(--line);
+  }
+  .ok {
+    color: var(--ok);
+  }
+  .copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: none;
+    border: 1px solid var(--line-mid);
+    color: var(--line);
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+  @media (max-width: 860px) {
+    .verify {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .rung {
+      grid-template-columns: 72px minmax(0, 1fr);
+    }
+    .rung .chips {
+      grid-column: 1 / -1;
+      padding-top: 0;
+    }
+  }
+</style>

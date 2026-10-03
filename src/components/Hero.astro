@@ -1,4 +1,6 @@
 ---
+import pkg from "../../package.json";
+
 // Years of experience are counted at build time, so the number stays current.
 const years = new Date().getFullYear() - 2013;
 ---
@@ -20,7 +22,7 @@ const years = new Date().getFullYear() - 2013;
   <div class="titleblock" aria-label="Drawing title block">
     <div class="wide"><b>Drawing</b>The paved road, commit to cluster</div>
     <div><b>Dwg no.</b>JF-001</div>
-    <div><b>Rev</b>0.3</div>
+    <div><b>Rev</b>{pkg.version}</div>
     <div><b>Drawn by</b>J. Frericks</div>
     <div><b>Since</b>2013</div>
     <div class="wide"><b>Status</b><span class="stamp">Under construction</span></div>
