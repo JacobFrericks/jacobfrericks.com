@@ -11,3 +11,14 @@ npm run build && npm run preview   # serves the built site at http://localhost:4
 ```
 
 Pull requests run the build only. Merging to `main` deploys.
+
+## Verify a release
+
+Each deploy from `main` publishes the site bundle and its SLSA Build L3 provenance as a release.
+
+```sh
+gh release download --repo JacobFrericks/jacobfrericks.com --pattern 'site.*'
+slsa-verifier verify-artifact site.tar \
+  --provenance-path site.intoto.jsonl \
+  --source-uri github.com/JacobFrericks/jacobfrericks.com
+```
