@@ -1,0 +1,216 @@
+---
+import { links } from "../data/chain";
+import { projects, type Status } from "../data/projects";
+
+const linkInfo = (id: string) => {
+  const i = links.findIndex((link) => link.id === id);
+  return { number: String(i + 1).padStart(2, "0"), name: links[i].name };
+};
+
+const statusLabel: Record<Status, string> = {
+  shipped: "● shipped",
+  "in-progress": "◐ in progress",
+  personal: "● personal",
+};
+---
+
+<section id="projects" class="section">
+  <div class="sec-head">
+    <span class="label">Section C</span>
+    <h2>Projects</h2>
+    <p>Each card is tagged with the chain link it protects. Filter by link.</p>
+  </div>
+
+  <!-- Hidden until the script runs, so without JavaScript every card simply shows. -->
+  <div class="filters" role="group" aria-label="Filter projects by chain link" hidden>
+    <button type="button" aria-pressed="true" data-filter="all">All</button>
+    {
+      links.map((link) => (
+        <button type="button" aria-pressed="false" data-filter={link.id}>
+          {link.name}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="projects">
+    {
+      projects.map((project) => {
+        const info = linkInfo(project.link);
+        return (
+          <article class="card" data-link={project.link}>
+            <div class="card-top">
+              <span class="tag">
+                Link {info.number} · {info.name}
+              </span>
+              <span class={`state ${project.status}`}>{statusLabel[project.status]}</span>
+            </div>
+            <div class="card-title">
+              <h3>{project.title}</h3>
+              <span class="where">{project.where}</span>
+            </div>
+            <dl>
+              <div>
+                <dt>Problem</dt>
+                <dd>{project.problem}</dd>
+              </div>
+              <div>
+                <dt>Fix</dt>
+                <dd>{project.fix}</dd>
+              </div>
+              <div>
+                <dt>Result</dt>
+                <dd class="result">{project.result}</dd>
+              </div>
+            </dl>
+            <div class="card-foot">
+              {project.tools.map((tool) => (
+                <span class="chip">{tool}</span>
+              ))}
+            </div>
+          </article>
+        );
+      })
+    }
+  </div>
+</section>
+
+<script>
+  // Filters cards by chain link. Pressed state is kept in aria-pressed for screen readers.
+  const group = document.querySelector<HTMLElement>("#projects .filters")!;
+  const buttons = [...group.querySelectorAll<HTMLButtonElement>("button")];
+  const cards = [...document.querySelectorAll<HTMLElement>("#projects .card")];
+
+  group.hidden = false;
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.filter;
+      for (const other of buttons) other.setAttribute("aria-pressed", String(other === button));
+      for (const card of cards) card.hidden = filter !== "all" && card.dataset.link !== filter;
+    });
+  }
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .filters[hidden],
+  .card[hidden] {
+    display: none;
+  }
+  .filters button {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1px solid var(--line-mid);
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .filters button[aria-pressed="true"] {
+    border-color: var(--line);
+    color: var(--ground-deep);
+    background: var(--line);
+  }
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .card {
+    border: 1px solid var(--line-mid);
+    background: rgba(10, 32, 56, 0.55);
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 12px;
+    padding: 20px;
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--line);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .state {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ok);
+    white-space: nowrap;
+  }
+  .state.in-progress {
+    color: var(--risk);
+  }
+  .card-title {
+    display: grid;
+    gap: 4px;
+  }
+  h3 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 26px;
+    line-height: 1.05;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .where {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  dl {
+    margin: 0;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  dd {
+    margin: 0;
+    font-size: 14px;
+  }
+  dd.result {
+    color: var(--ok);
+  }
+  .card:has(.in-progress) dd.result {
+    color: var(--risk);
+  }
+  .card-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line-faint);
+  }
+  .card-foot .chip {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+  @media (max-width: 860px) {
+    .projects {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .projects {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
