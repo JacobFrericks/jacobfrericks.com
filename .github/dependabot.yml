@@ -1,0 +1,23 @@
+version: 2
+updates:
+  # A 7-day cooldown skips brand-new releases, which is when hijacked packages are usually caught.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  # Keeps SHA-pinned actions current and updates the version comment next to each SHA.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      actions-minor-and-patch:
+        update-types: [minor, patch]
