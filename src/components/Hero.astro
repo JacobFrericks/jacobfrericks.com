@@ -3,6 +3,9 @@ import pkg from "../../package.json";
 
 // Years of experience are counted at build time, so the number stays current.
 const years = new Date().getFullYear() - 2013;
+
+// The drawing is "released" from version 1.0.0 on, so the status can never fall out of date.
+const released = Number(pkg.version.split(".")[0]) >= 1;
 ---
 
 <div class="hero">
@@ -25,7 +28,7 @@ const years = new Date().getFullYear() - 2013;
     <div><b>Rev</b>{pkg.version}</div>
     <div><b>Drawn by</b>J. Frericks</div>
     <div><b>Since</b>2013</div>
-    <div class="wide"><b>Status</b><span class="stamp">Under construction</span></div>
+    <div class="wide"><b>Status</b><span class={released ? "stamp released" : "stamp"}>{released ? "Released" : "Under construction"}</span></div>
   </div>
 </div>
 
@@ -98,6 +101,9 @@ const years = new Date().getFullYear() - 2013;
   }
   .stamp {
     color: var(--risk);
+  }
+  .stamp.released {
+    color: var(--ok);
   }
   @media (max-width: 860px) {
     .hero {
