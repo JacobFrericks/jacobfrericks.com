@@ -4,7 +4,7 @@ import { links, defaultLink } from "../data/chain";
 const number = (i: number) => String(i + 1).padStart(2, "0");
 ---
 
-<section id="chain">
+<section id="chain" class="section">
   <div class="sec-head">
     <span class="label">Section A</span>
     <h2>The chain</h2>
@@ -98,32 +98,6 @@ const number = (i: number) => String(i + 1).padStart(2, "0");
 </script>
 
 <style>
-  section {
-    padding: 48px 24px;
-    border-top: 1px solid var(--line-mid);
-  }
-  .sec-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 8px 20px;
-    margin-bottom: 28px;
-  }
-  h2 {
-    font-family: var(--display);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 36px;
-    line-height: 1;
-    margin: 0;
-    letter-spacing: 0.02em;
-  }
-  .sec-head p {
-    margin: 0;
-    color: var(--muted);
-    max-width: 62ch;
-    flex-basis: 100%;
-  }
   .chain {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));

@@ -3,9 +3,11 @@ import Base from "../layouts/Base.astro";
 import TopBar from "../components/TopBar.astro";
 import Hero from "../components/Hero.astro";
 import Chain from "../components/Chain.astro";
+import Projects from "../components/Projects.astro";
 
 const links = [
   { label: "The chain", href: "#chain" },
+  { label: "Projects", href: "#projects" },
   { label: "GitHub", href: "https://github.com/JacobFrericks" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jacobfrericks" },
 ];
@@ -18,4 +20,5 @@ const links = [
   <TopBar links={links} />
   <Hero />
   <Chain />
+  <Projects />
 </Base>
