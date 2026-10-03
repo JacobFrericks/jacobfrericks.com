@@ -21,3 +21,11 @@ updates:
     groups:
       actions-minor-and-patch:
         update-types: [minor, patch]
+
+  # The Semgrep image used by the Semgrep workflow. Updates both the tag and the digest.
+  - package-ecosystem: docker
+    directory: /.github/semgrep
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
