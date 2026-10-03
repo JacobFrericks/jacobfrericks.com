@@ -1,0 +1,103 @@
+/* Single theme by choice: the whole site is one blueprint sheet. */
+:root {
+  color-scheme: dark;
+  --ground: #0e2a47;
+  --ground-deep: #0a2038;
+  --line: #7fd4f0;
+  --line-faint: rgba(127, 212, 240, 0.14);
+  --line-mid: rgba(127, 212, 240, 0.35);
+  --paper: #e8f1f7;
+  --muted: #93b3cc;
+  --ok: #6fd39a;
+  --risk: #f2b45a;
+  --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  background-image:
+    linear-gradient(var(--line-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-faint) 1px, transparent 1px),
+    linear-gradient(rgba(127, 212, 240, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127, 212, 240, 0.05) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  color: var(--paper);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--line);
+}
+
+:focus-visible {
+  outline: 2px solid var(--risk);
+  outline-offset: 3px;
+}
+
+.sheet {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: 24px;
+  padding-block: 24px 48px;
+}
+
+.frame {
+  border: 1px solid var(--line-mid);
+  outline: 1px solid var(--line-faint);
+  outline-offset: 6px;
+  display: grid;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  color: var(--line);
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--line);
+  color: var(--ground-deep);
+}
+
+.btn.solid {
+  background: var(--line);
+  color: var(--ground-deep);
+}
+
+.btn.solid:hover {
+  background: var(--paper);
+  border-color: var(--paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
