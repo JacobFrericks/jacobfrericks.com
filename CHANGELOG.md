@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.3.0...v0.4.0) (2026-10-03)
+
+
+### Features
+
+* add the SLSA ladder and verify-this-site section ([#22](https://github.com/JacobFrericks/jacobfrericks.com/issues/22)) ([71f728e](https://github.com/JacobFrericks/jacobfrericks.com/commit/71f728e3583e5b4ca942c0bca144feea1480b3dc))
+
 ## [0.3.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.2.0...v0.3.0) (2026-10-03)
 
 
