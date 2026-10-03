@@ -22,3 +22,12 @@ slsa-verifier verify-artifact site.tar \
   --provenance-path site.intoto.jsonl \
   --source-uri github.com/JacobFrericks/jacobfrericks.com
 ```
+
+## License
+
+The code in this repository (workflows, configuration, and site source) is released under the [MIT License](LICENSE).
+The written content and personal information on the site are © Jacob Frericks, all rights reserved.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) to report a vulnerability.
