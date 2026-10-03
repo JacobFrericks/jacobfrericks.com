@@ -35,9 +35,13 @@ test("every verify check is marked PASS or NEXT, and planned work is not marked 
   assert.ok(checks.length >= 5);
   for (const [, status] of checks) assert.ok(["pass", "next"].includes(status), `unknown status ${status}`);
   const passed = checks.filter(([, status]) => status === "pass").map(([, , name]) => name);
-  for (const planned of ["Content Security Policy", "SBOM"]) {
-    assert.ok(!passed.some((name) => name.includes(planned)), `${planned} is claimed before it exists`);
-  }
+  assert.ok(!passed.some((name) => name.includes("SBOM")), "SBOM is claimed before it exists");
+});
+
+test("a Content Security Policy claim is backed by a real policy on the page", () => {
+  const claimed = /data-status="pass"[^>]*>[^<]*Content Security Policy/.test(section);
+  const present = /<meta http-equiv="Content-Security-Policy"/.test(html);
+  assert.equal(claimed, present, claimed ? "CSP is claimed but missing" : "CSP exists but is not claimed");
 });
 
 test("the copy button holds the same verify command the README documents", () => {
