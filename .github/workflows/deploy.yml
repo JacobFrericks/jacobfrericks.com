@@ -30,6 +30,7 @@ jobs:
       # npm ci installs exactly what package-lock.json lists, or fails.
       - run: npm ci
       - run: npm run build
+      - run: npm test
 
       # Same tar flags as actions/upload-pages-artifact, so Pages serves the exact bytes we attest.
       - name: Package site
