@@ -1,0 +1,9 @@
+# Each exception needs a reason and an expiry date, after which Trivy blocks again.
+vulnerabilities:
+  - id: CVE-2026-93748
+    paths: ["package-lock.json"]
+    statement: >-
+      http-cache-semantics comes from astro and runs only during the build, never in the
+      published site. Every released version is affected and no fix exists yet. When a fix
+      ships, take it through astro or an npm override.
+    expired_at: 2026-11-03
