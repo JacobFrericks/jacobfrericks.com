@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.2.0...v0.3.0) (2026-10-03)
+
+
+### Features
+
+* add project cards with chain link filters ([#20](https://github.com/JacobFrericks/jacobfrericks.com/issues/20)) ([a159935](https://github.com/JacobFrericks/jacobfrericks.com/commit/a159935a81477ceb434b4ba4266a28652af74f18))
+
 ## [0.2.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.1.0...v0.2.0) (2026-10-03)
 
 
