@@ -1,0 +1,70 @@
+---
+import { toolbox } from "../data/toolbox";
+---
+
+<section id="toolbox" class="section">
+  <div class="sec-head">
+    <span class="label">Section E</span>
+    <h2>Toolbox</h2>
+    <p>The tools behind the work above, grouped by what they protect or run.</p>
+  </div>
+
+  <div class="toolbox">
+    {
+      toolbox.map((column) => (
+        <div class="column">
+          <h3>{column.title}</h3>
+          {column.groups.map((group) => (
+            <div class="group">
+              <span class="label">{group.label}</span>
+              <ul>
+                {group.tools.map((tool) => (
+                  <li class="chip">{tool}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .toolbox {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .column {
+    border: 1px solid var(--line-mid);
+    padding: 20px;
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+  h3 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .group {
+    display: grid;
+    gap: 8px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  @media (max-width: 640px) {
+    .toolbox {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
