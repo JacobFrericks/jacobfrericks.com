@@ -29,6 +29,8 @@ jobs:
 
       # npm ci installs exactly what package-lock.json lists, or fails.
       - run: npm ci
+      # Type-checks all Astro and TypeScript files; any warning fails the build.
+      - run: npm run lint
       - run: npm run build
       - run: npm test
 
