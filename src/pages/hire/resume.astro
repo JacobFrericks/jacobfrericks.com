@@ -1,0 +1,156 @@
+---
+// One-page résumé laid out for US Letter. scripts/build-pdf.mjs prints it to /jacob-frericks-resume.pdf.
+import Base from "../../layouts/Base.astro";
+import pkg from "../../../package.json";
+import { career } from "../../data/career";
+import { highlights, location, skills } from "../../data/hire";
+
+const years = new Date().getFullYear() - 2013;
+const when = (start: number, end: number | "now") => (start === end ? `${start}` : `${start} – ${end}`);
+const allSkills = skills.flatMap((group) => group.tools).join(", ");
+---
+
+<Base
+  title="Jacob Frericks | Résumé"
+  description="One-page résumé for Jacob Frericks, Staff DevOps Engineer."
+  theme="whiteprint"
+  printOnly
+>
+  <main class="page">
+    <header>
+      <h1>Jacob Frericks</h1>
+      <p class="sub">
+        Staff DevOps Engineer · {location.city} · {location.remote} · linkedin.com/in/jacobfrericks ·
+        github.com/JacobFrericks
+      </p>
+    </header>
+
+    <p class="rule summary">
+      I build secure pipelines developers actually use. My focus is CI/CD platforms, signed builds, and guardrails for
+      the software supply chain. {years} years in software delivery, from Java developer to DevSecOps.
+    </p>
+
+    <div class="rule two">
+      <section>
+        <h2>Highlights</h2>
+        <ul>{highlights.map((item) => <li>{item.text}</li>)}</ul>
+      </section>
+      <section>
+        <h2>Skills</h2>
+        <p>{allSkills}</p>
+      </section>
+    </div>
+
+    <section class="rule">
+      <h2>Experience</h2>
+      {
+        career.map((role) => (
+          <div class="role">
+            <span class="when">{when(role.start, role.end)}</span>
+            <div>
+              <b>{role.title}</b> · {role.org}
+              {role.summary && <p>{role.summary}</p>}
+            </div>
+          </div>
+        ))
+      }
+    </section>
+
+    <footer class="stamp">
+      <span>DWG JF-003 · Résumé · rev {pkg.version}</span>
+      <span>Signed with SLSA Build L3 · verify at www.jacobfrericks.com/#verify</span>
+    </footer>
+  </main>
+</Base>
+
+<style>
+  @page {
+    size: Letter;
+    margin: 0.5in 0.6in;
+  }
+  :global(body) {
+    background: #ffffff;
+    background-image: none;
+  }
+  .page {
+    max-width: 7.3in;
+    margin: 0 auto;
+    display: grid;
+    gap: 12px;
+    font-size: 10.5pt;
+    line-height: 1.4;
+    color: var(--paper);
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 30pt;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .sub {
+    font-family: var(--mono);
+    font-size: 8.5pt;
+    color: var(--muted);
+    margin: 4px 0 0;
+  }
+  .rule {
+    border-top: 1.5px solid var(--paper);
+    padding-top: 8px;
+    margin: 0;
+  }
+  h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 13pt;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 4px;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  ul {
+    margin: 0;
+    padding-left: 14px;
+  }
+  li {
+    margin-bottom: 2px;
+  }
+  .two p {
+    margin: 0;
+  }
+  .role {
+    display: grid;
+    grid-template-columns: 0.95in 1fr;
+    gap: 8px;
+    margin-bottom: 6px;
+    break-inside: avoid;
+  }
+  .when {
+    font-family: var(--mono);
+    font-size: 8.5pt;
+    color: var(--muted);
+    padding-top: 1px;
+  }
+  .role b {
+    font-weight: 600;
+  }
+  .role p {
+    margin: 1px 0 0;
+    color: var(--muted);
+  }
+  .stamp {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--line-mid);
+    padding-top: 6px;
+    font-family: var(--mono);
+    font-size: 7.5pt;
+    color: var(--muted);
+  }
+</style>

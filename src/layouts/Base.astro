@@ -13,9 +13,11 @@ interface Props {
   description: string;
   // "whiteprint" is the light version used on the recruiter page.
   theme?: "blueprint" | "whiteprint";
+  // Print-only pages skip the drawing frame and ask search engines not to index them.
+  printOnly?: boolean;
 }
 
-const { title, description, theme = "blueprint" } = Astro.props;
+const { title, description, theme = "blueprint", printOnly = false } = Astro.props;
 ---
 
 <html lang="en">
@@ -29,12 +31,19 @@ const { title, description, theme = "blueprint" } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {printOnly && <meta name="robots" content="noindex" />}
   </head>
   <body data-theme={theme}>
-    <div class="sheet">
-      <div class="frame">
+    {
+      printOnly ? (
         <slot />
-      </div>
-    </div>
+      ) : (
+        <div class="sheet">
+          <div class="frame">
+            <slot />
+          </div>
+        </div>
+      )
+    }
   </body>
 </html>

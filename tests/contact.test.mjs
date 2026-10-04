@@ -2,6 +2,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { readdirSync } from "node:fs";
+import { join, extname } from "node:path";
+
+const distDir = new URL("../dist/", import.meta.url).pathname;
+const walk = (dir) =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+    entry.isDirectory() ? walk(join(dir, entry.name)) : [join(dir, entry.name)],
+  );
+const allPages = walk(distDir).filter((file) => extname(file) === ".html").map((file) => readFileSync(file, "utf8"));
 
 const html = readFileSync(new URL("../dist/index.html", import.meta.url), "utf8");
 const { version } = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
@@ -20,14 +29,12 @@ test("contact is the last section, followed by the footer", () => {
 });
 
 // The CSP sets form-action 'none', so a form could never submit. There must be none.
-const pages = ["index.html", "hire/index.html"].map((page) => readFileSync(new URL(`../dist/${page}`, import.meta.url), "utf8"));
-
 test("no page has a form", () => {
-  for (const page of pages) assert.doesNotMatch(page, /<form\b/);
+  for (const page of allPages) assert.doesNotMatch(page, /<form\b/);
 });
 
 test("no page shows an email address or phone number", () => {
-  for (const page of pages) {
+  for (const page of allPages) {
     const words = page.replace(/<[^>]+>/g, " ");
     assert.doesNotMatch(words, /[\w.+-]+@[\w-]+\.[a-z]{2,}/i, "an email address is on a page");
     assert.doesNotMatch(words, /\b\d{3}[-.\s)]+\d{3}[-.\s]+\d{4}\b/, "a phone number is on a page");
