@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/JacobFrericks/jacobfrericks.com/compare/v1.1.0...v1.1.1) (2026-10-04)
+
+
+### Bug Fixes
+
+* give the résumé PDF white side margins ([#36](https://github.com/JacobFrericks/jacobfrericks.com/issues/36)) ([0b2becf](https://github.com/JacobFrericks/jacobfrericks.com/commit/0b2becf3f5382f2861b0971f3a7d6aa05c7522cc))
+
 ## [1.1.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v1.0.0...v1.1.0) (2026-10-04)
 
 
