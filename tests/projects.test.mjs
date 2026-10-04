@@ -2,6 +2,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { readdirSync } from "node:fs";
+import { join, extname } from "node:path";
+
+const distDir = new URL("../dist/", import.meta.url).pathname;
+const walk = (dir) =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+    entry.isDirectory() ? walk(join(dir, entry.name)) : [join(dir, entry.name)],
+  );
+const allPages = walk(distDir).filter((file) => extname(file) === ".html").map((file) => readFileSync(file, "utf8"));
 
 const html = readFileSync(new URL("../dist/index.html", import.meta.url), "utf8");
 const chainIds = ["source", "deps", "build", "artifact", "deploy", "runtime"];
@@ -45,8 +54,7 @@ test("there is one filter per chain link, plus All", () => {
 
 // The current employer is described, never named, anywhere on the site.
 test("no page names the current employer", () => {
-  const pages = ["index.html", "hire/index.html"].map((page) => readFileSync(new URL(`../dist/${page}`, import.meta.url), "utf8"));
-  for (const page of pages) {
+  for (const page of allPages) {
     assert.doesNotMatch(page, /\bCVS\b/i);
     assert.match(page, /Fortune 10 healthcare company/);
   }

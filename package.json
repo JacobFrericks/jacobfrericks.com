@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/build-pdf.mjs",
     "preview": "astro preview",
     "test": "node --test \"tests/**/*.test.mjs\"",
     "lint": "astro check --minimumFailingSeverity warning"
