@@ -64,17 +64,18 @@ const allSkills = skills.flatMap((group) => group.tools).join(", ");
 </Base>
 
 <style>
+  /* Margins are padding on the white page, not @page margins, which some viewers draw as transparent or black. */
   @page {
     size: Letter;
-    margin: 0.5in 0.6in;
+    margin: 0;
   }
+  :global(html),
   :global(body) {
     background: #ffffff;
     background-image: none;
   }
   .page {
-    max-width: 7.3in;
-    margin: 0 auto;
+    padding: 0.55in 0.8in;
     display: grid;
     gap: 12px;
     font-size: 10.5pt;
