@@ -1,7 +1,7 @@
 // Tests for the generated résumé PDF and the page it is printed from. Run `npm run build` first.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 
 const dist = (path) => new URL(`../dist/${path}`, import.meta.url);
 const pdfPath = dist("jacob-frericks-resume.pdf");
@@ -34,4 +34,14 @@ test("the print page is kept out of search results and uses the same data", () =
   for (const org of ["Hy-Vee", "Principal Financial Group", "IBM", "Iowa State University"]) {
     assert.match(resume, new RegExp(org));
   }
+});
+
+// Margins must be white padding on the page. @page margins can render as transparent or black.
+test("the résumé's margins are part of the white page", () => {
+  const cssFile = resume.match(/href="\/(_astro\/resume[^"]+\.css)"/)?.[1];
+  assert.ok(cssFile, "the résumé stylesheet is missing");
+  const css = readFileSync(dist(cssFile), "utf8").replace(/\s+/g, "");
+  assert.match(css, /@page\{size:Letter;margin:0\}/);
+  const sides = Number(css.match(/\.page\[[^\]]+\]\{padding:[\d.]+in([\d.]+)in/)?.[1] ?? css.match(/padding:[\d.]+in([\d.]+)in/)?.[1]);
+  assert.ok(sides >= 0.75, `side margins are ${sides}in, want at least 0.75in`);
 });
