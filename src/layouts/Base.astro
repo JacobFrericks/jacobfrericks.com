@@ -11,9 +11,11 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description: string;
+  // "whiteprint" is the light version used on the recruiter page.
+  theme?: "blueprint" | "whiteprint";
 }
 
-const { title, description } = Astro.props;
+const { title, description, theme = "blueprint" } = Astro.props;
 ---
 
 <html lang="en">
@@ -28,7 +30,7 @@ const { title, description } = Astro.props;
     <title>{title}</title>
     <meta name="description" content={description} />
   </head>
-  <body>
+  <body data-theme={theme}>
     <div class="sheet">
       <div class="frame">
         <slot />
