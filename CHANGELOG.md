@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v1.0.0...v1.1.0) (2026-10-04)
+
+
+### Features
+
+* add the /hire recruiter page ([#33](https://github.com/JacobFrericks/jacobfrericks.com/issues/33)) ([dd9195e](https://github.com/JacobFrericks/jacobfrericks.com/commit/dd9195e36640466f63ef349b697e3af06225d7c9))
+* generate a signed one-page résumé PDF ([#35](https://github.com/JacobFrericks/jacobfrericks.com/issues/35)) ([db533e8](https://github.com/JacobFrericks/jacobfrericks.com/commit/db533e83a326506754c2f14183b01d1318f168cd))
+
 ## [1.0.0](https://github.com/JacobFrericks/jacobfrericks.com/compare/v0.5.0...v1.0.0) (2026-10-03)
 
 
