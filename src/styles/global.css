@@ -15,6 +15,24 @@
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
+/* Light "whiteprint" theme for the recruiter page: same drawing, printed on white. */
+body[data-theme="whiteprint"] {
+  color-scheme: light;
+  --ground: #f7f9fb;
+  --ground-deep: #ffffff;
+  --line: #1c6f9c;
+  --line-faint: rgba(14, 42, 71, 0.05);
+  --line-mid: rgba(14, 42, 71, 0.16);
+  --paper: #0e2a47;
+  --muted: #4e6b85;
+  --ok: #1f8a5b;
+  --risk: #9a5b0f;
+}
+
+body[data-theme="whiteprint"] .frame {
+  background: #ffffff;
+}
+
 * {
   box-sizing: border-box;
 }

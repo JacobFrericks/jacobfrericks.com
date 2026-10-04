@@ -44,7 +44,10 @@ test("there is one filter per chain link, plus All", () => {
 });
 
 // The current employer is described, never named, anywhere on the site.
-test("the site never names the current employer", () => {
-  assert.doesNotMatch(html, /\bCVS\b/i);
-  assert.match(html, /Fortune 10 healthcare company/);
+test("no page names the current employer", () => {
+  const pages = ["index.html", "hire/index.html"].map((page) => readFileSync(new URL(`../dist/${page}`, import.meta.url), "utf8"));
+  for (const page of pages) {
+    assert.doesNotMatch(page, /\bCVS\b/i);
+    assert.match(page, /Fortune 10 healthcare company/);
+  }
 });
